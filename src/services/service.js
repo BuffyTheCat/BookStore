@@ -3,11 +3,13 @@ export default class storeService {
         return [
             {
                 id: 1,
-                author: 'test'
+                author: 'test',
+                title: 'test title',
             },
             {
                 id: 2,
-                author: 'test2'
+                author: 'test2',
+                title: 'test title 2',
             }
         ]
     }
