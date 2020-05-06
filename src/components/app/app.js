@@ -1,10 +1,18 @@
 import React from 'react';
-import { withService } from '../hoc'
+import { Route, Switch } from 'react-router-dom';
 import { AppStyled } from './styles';
+import { HomePage, CardPage } from '../pages';
 
-const App = ( { storeService } ) => {
-    console.log(storeService.getBook());
-    return <AppStyled>App</AppStyled>
+const App = () => {
+    return (
+        <AppStyled>
+            <Switch>
+                <Route path='/' component={HomePage} exact />
+                <Route path='/card' component={CardPage} />
+                <Route />
+            </Switch>
+        </AppStyled>
+    )
 }
 
-export default withService()(App);
+export default App;
