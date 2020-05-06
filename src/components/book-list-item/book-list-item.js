@@ -1,12 +1,17 @@
 import React from 'react';
-import { StyledBookListItem } from './styles';
+import { StyledBookListItem, StyledBookListItemInfo } from './styles';
 
 const BookListItem = ( { book } ) => {
-    const { title, author } = book;
+    const { title, author, imgPath, price } = book;
     return (
         <StyledBookListItem>
-            <span>{author}</span>
-            <p>{title}</p>
+            <img src={imgPath} alt="cover" />
+            <StyledBookListItemInfo>                
+                <a href="#">{title}</a>
+                <p>{author}</p>
+                <span>$ {price}</span>
+                <button>Add</button>
+            </StyledBookListItemInfo>
         </StyledBookListItem>
     )
 }

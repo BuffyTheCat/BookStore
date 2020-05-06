@@ -6,33 +6,41 @@ import { bindActionCreators } from 'redux';
 
 import { withService } from '../hoc';
 import { booksLoaded } from '../../actions'
+import Spinner from '../spinner'
 
 class BookList extends Component {
     componentDidMount() {
-        const { storeService } = this.props;
-        const data = storeService.getBook();
-        this.props.booksLoaded(data);
+        const { storeService, booksLoaded } = this.props;
+        storeService.getBook().then((data) => booksLoaded(data));
     }
 
     render() {
-        const { books } = this.props;
-        return (
-            <StyledBookList>
-                {
-                    books.map((book) => {
-                        return (
-                            <BookListItem key={book.id} book={book} />
-                        )
-                    })
-                }
-            </StyledBookList>
-        )
+        const { books, loading } = this.props;
+
+        if (loading) {
+            return (
+                <Spinner />
+            )
+        } else {
+            return (
+                <StyledBookList>
+                    {
+                        books.map((book) => {
+                            return (
+                                <BookListItem key={book.id} book={book} />
+                            )
+                        })
+                    }
+                </StyledBookList>
+            )
+        }
     };
 };
 
-const mapStateToProps = ({ books }) => {
+const mapStateToProps = ({ books, loading }) => {
     return {
         books,
+        loading
     }
 }
 
