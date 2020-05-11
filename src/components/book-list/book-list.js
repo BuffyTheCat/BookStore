@@ -9,7 +9,21 @@ import { fetchBooks } from '../../actions'
 import Spinner from '../spinner'
 import ErrorIndicator from '../error-indicator'
 
-class BookList extends Component {
+const BookList = ({ books }) => {
+    return (
+        <StyledBookList>
+            {
+                books.map((book) => {
+                    return (
+                        <BookListItem key={book.id} book={book} />
+                    )
+                })
+            }
+        </StyledBookList>
+    )
+}
+
+class BookListContainer extends Component {
     componentDidMount() {
         this.props.fetchBooks();
     }
@@ -29,17 +43,7 @@ class BookList extends Component {
             )
         }
 
-        return (
-            <StyledBookList>
-                {
-                    books.map((book) => {
-                        return (
-                            <BookListItem key={book.id} book={book} />
-                        )
-                    })
-                }
-            </StyledBookList>
-        )
+        return <BookList books={books} />
     };
 };
 
@@ -57,4 +61,4 @@ const mapDispatchToProps = (dispatch, { storeService }) => {
     }
 }
 
-export default withService()(connect(mapStateToProps, mapDispatchToProps)(BookList));
+export default withService()(connect(mapStateToProps, mapDispatchToProps)(BookListContainer));
