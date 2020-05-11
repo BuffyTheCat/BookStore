@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { StyledBookList } from './styles';
 import BookListItem from '../book-list-item';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { withService } from '../hoc';
-import { booksLoaded, booksRequested, booksError } from '../../actions'
+import { fetchBooks } from '../../actions'
 import Spinner from '../spinner'
 import ErrorIndicator from '../error-indicator'
 
@@ -50,15 +51,9 @@ const mapStateToProps = ({ books, loading, error }) => {
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    const { storeService } = ownProps;
+const mapDispatchToProps = (dispatch, { storeService }) => {
     return {
-        fetchBooks: () => {
-            dispatch(booksRequested());
-            storeService.getBook()
-                .then((data) => dispatch(booksLoaded(data)))
-                .catch(err => dispatch(booksError(err)));
-        }
+        fetchBooks: fetchBooks(storeService, dispatch)
     }
 }
 
