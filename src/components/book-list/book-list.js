@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { StyledBookList } from './styles';
 import BookListItem from '../book-list-item';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
 import { withService } from '../hoc';
 import { booksLoaded, booksRequested, booksError } from '../../actions'
@@ -11,11 +10,7 @@ import ErrorIndicator from '../error-indicator'
 
 class BookList extends Component {
     componentDidMount() {
-        const { storeService, booksLoaded, booksRequested, booksError } = this.props;
-        booksRequested();
-        storeService.getBook()
-            .then((data) => booksLoaded(data))
-            .catch(err => booksError(err));
+        this.props.fetchBooks();
     }
 
     render() {
@@ -55,10 +50,16 @@ const mapStateToProps = ({ books, loading, error }) => {
     }
 }
 
-const mapDispatchToProps = {
-    booksLoaded,
-    booksRequested,
-    booksError
+const mapDispatchToProps = (dispatch, ownProps) => {
+    const { storeService } = ownProps;
+    return {
+        fetchBooks: () => {
+            dispatch(booksRequested());
+            storeService.getBook()
+                .then((data) => dispatch(booksLoaded(data)))
+                .catch(err => dispatch(booksError(err)));
+        }
+    }
 }
 
 export default withService()(connect(mapStateToProps, mapDispatchToProps)(BookList));
