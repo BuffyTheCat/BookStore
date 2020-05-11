@@ -1,7 +1,27 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import { ShoppingCardTableStyled } from './styles';
 
-const ShoppingCardTable = ( {total} ) => {
+
+
+const ShoppingCardTable = ({ items, total, onIncrease, onDecrease, onDelite }) => {
+    const renderRow = (item, idx) => {
+        const { id, title, count, total } = item;
+        return (
+            <tr key={id}>
+                <td>{idx + 1}</td>
+                <td>{title}</td>
+                <td>{count}</td>
+                <td>{total}</td>
+                <td>
+                    <button onClick={() => onIncrease(id)}>plus</button>
+                    <button onClick={() => onDelite(id)}>remove</button>
+                    <button onClick={() => onDecrease(id)}>minus</button>
+                </td>
+            </tr>
+        )
+    }
+
     return (
         <ShoppingCardTableStyled>
             <h2>Your Order</h2>
@@ -16,17 +36,7 @@ const ShoppingCardTable = ( {total} ) => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>test title</td>
-                        <td>1</td>
-                        <td>11</td>
-                        <td>
-                            <button>plus</button>
-                            <button>remove</button>
-                            <button>minus</button>
-                        </td>
-                    </tr>
+                    { items.map(renderRow) }
                 </tbody>
             </table>
             <p>Total: ${total}</p>
@@ -34,4 +44,25 @@ const ShoppingCardTable = ( {total} ) => {
     )
 }
 
-export default ShoppingCardTable;
+const mapStateToProps = ( {cardItems, orderTotal}) => {
+    return {
+        items: cardItems,
+        total: orderTotal
+    }
+}
+
+const mapDispatchToProps = () => {
+    return {
+        onIncrease: () => {
+            console.log(1);
+        },
+        onDecrease: () => {
+            console.log(1);
+        },
+        onDelite: () => {
+            console.log(1);
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShoppingCardTable);
