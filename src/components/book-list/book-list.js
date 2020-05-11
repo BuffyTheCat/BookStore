@@ -5,47 +5,60 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { withService } from '../hoc';
-import { booksLoaded } from '../../actions'
+import { booksLoaded, booksRequested, booksError } from '../../actions'
 import Spinner from '../spinner'
+import ErrorIndicator from '../error-indicator'
 
 class BookList extends Component {
     componentDidMount() {
-        const { storeService, booksLoaded } = this.props;
-        storeService.getBook().then((data) => booksLoaded(data));
+        const { storeService, booksLoaded, booksRequested, booksError } = this.props;
+        booksRequested();
+        storeService.getBook()
+            .then((data) => booksLoaded(data))
+            .catch(err => booksError(err));
     }
 
     render() {
-        const { books, loading } = this.props;
+        const { books, loading, error } = this.props;
 
         if (loading) {
             return (
                 <Spinner />
             )
-        } else {
+        }
+
+        if (error) {
             return (
-                <StyledBookList>
-                    {
-                        books.map((book) => {
-                            return (
-                                <BookListItem key={book.id} book={book} />
-                            )
-                        })
-                    }
-                </StyledBookList>
+                <ErrorIndicator />
             )
         }
+
+        return (
+            <StyledBookList>
+                {
+                    books.map((book) => {
+                        return (
+                            <BookListItem key={book.id} book={book} />
+                        )
+                    })
+                }
+            </StyledBookList>
+        )
     };
 };
 
-const mapStateToProps = ({ books, loading }) => {
+const mapStateToProps = ({ books, loading, error }) => {
     return {
         books,
-        loading
+        loading,
+        error
     }
 }
 
 const mapDispatchToProps = {
-    booksLoaded
+    booksLoaded,
+    booksRequested,
+    booksError
 }
 
 export default withService()(connect(mapStateToProps, mapDispatchToProps)(BookList));
